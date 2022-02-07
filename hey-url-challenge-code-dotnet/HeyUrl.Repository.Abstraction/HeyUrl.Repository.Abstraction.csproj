@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HeyUrl.Dto\HeyUrl.Dto.csproj" />
+    <ProjectReference Include="..\HeyUrl.Entity\HeyUrl.Entity.csproj" />
+  </ItemGroup>
+
+</Project>

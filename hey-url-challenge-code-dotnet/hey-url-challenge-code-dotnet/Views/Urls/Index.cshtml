@@ -1,0 +1,88 @@
+﻿@model hey_url_challenge_code_dotnet.ViewModels.Url.HomeViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (TempData["Notice"] is not null)
+{
+    <div class="card-panel notice deep-orange">@TempData["Notice"]</div>
+}
+
+<div class="row">
+    <div class="col m12">
+        <form asp-action="Index">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col m8 offset-m2 center-align">
+                            <span class="card-title">Create a new short URL</span>
+                        </div>
+                    </div>
+                    @if (TempData["NewShortUrl"] is not null)
+                    { 
+                    <div class="row">
+                        <div class="col m8 offset-m2">
+                             <div class="green-text card-panel">
+                                 Your url was created with short url <b>@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host,Url.Action("Visit", new {shortUrl=TempData["NewShortUrl"]}))</b>
+                             </div>
+                        </div>
+                    </div>
+                    }   
+                    <div class="row">
+                        <div class="col m8 offset-m2">
+                            <partial name="_ValidationSummary" model="ViewData.ModelState"></partial>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col m6 offset-m2">
+                            <input type="url" class="validate form-control" placeholder="Your original URL here" required asp-for="OriginalUrl" />
+                        </div>
+                        <div class="col m2">
+                            <button type="submit" class="btn">Shorten URL</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<table class="table highlight">
+    <thead>
+        <tr>
+            <th scope="col">Short URL</th>
+            <th scope="col">Original URL</th>
+            <th scope="col">Created</th>
+            <th scope="col">Clicks Count</th>
+            <th scope="col">Stats</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Urls != null && Model.Urls.Any())
+        {
+            @foreach (var url in Model.Urls)
+            {
+                <tr>
+                    <th scope="row"><a target="_blank" href="@Url.Action("Visit", new {shortUrl=url.ShortUrl})">@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host,Url.Action("Visit", new {shortUrl=url.ShortUrl}))</a></th>
+                    <td><a target="_blank" href="@url.OriginalUrl">@url.OriginalUrl</a></td>
+                    <td>@url.CreatedAt.ToString("MMM dd, yyyy")</td>
+                    <td>@url.Count</td>
+                    <td>
+                        <a href="@Url.Action("Show", new {shortUrl=url.ShortUrl})">
+                            <svg class="octicon octicon-graph" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M16 14v1H0V0h1v14h15zM5 13H3V8h2v5zm4 0H7V3h2v10zm4 0h-2V6h2v7z"></path>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <th colspan="5"><center>Urls not found.</center></th>
+            </tr>
+        }
+
+    </tbody>
+</table>
